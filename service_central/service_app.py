@@ -82,17 +82,31 @@ def find_car():
 
 
 def service_car():
-    vin = input('What is the vin of the car to service? ')
-    car = Car.objects().filter(vi_number=vin).first()
-    if not car:
-        print('Car with VIN {} not found'.format(vin))
-        return
+    # vin = input('What is the vin of the car to service? ')
+    # car = Car.objects().filter(vi_number=vin).first()
+    # if not car:
+    #     print('Car with VIN {} not found'.format(vin))
+    #     return
 
-    print('We will service '+ car.model)
+    # print('We will service '+ car.model)
+    # service = ServiceHistory()
+    # service.price = float(input('What is the price? '))
+    # service.description = input('What type of service is this? ')
+    # service.customers_rating = int(input('How happy our costumer? [1-5]'))
+
+    # car.service_history.append(service)
+    # car.save()
+
+    vin = input('What is the vin of the car to service? ')
     service = ServiceHistory()
     service.price = float(input('What is the price? '))
     service.description = input('What type of service is this? ')
-    service.customers_rating = int(input('How happy our costumer? [1-5]'))
+    service.customers_rating = int(input('How happy our costumer? [1-5] '))
+
+    updated = Car.objects(vi_number=vin).update_one(push__service_history=service)
+    if updated ==0:
+        print("Car with VIN {} not found!".format(vin))
+        return
 
     car.service_history.append(service)
     car.save()
