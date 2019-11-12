@@ -7,7 +7,14 @@ from nosql.servicehistory import ServiceHistory
 def main():
     print_header()
     config_mongo()
+    update_doc_version()
     user_loop()
+
+
+def update_doc_version():
+    for car in Car.objects():
+        car._mark_as_changed('vi_number')
+        car.save()
 
 
 def print_header():
@@ -19,6 +26,7 @@ def print_header():
     print('----------------------------------------------')
     print()
 
+
 def config_mongo():
     mongo_setup.global_init()
 
@@ -29,6 +37,7 @@ def user_loop():
         print(" * [a]dd car")
         print(" * [l]ist cars")
         print(" * [f]ind car")
+        print(" * [p]oor serviced")
         print(" * perform [s]ervice")
         print(" * e[x]it")
         print()
@@ -41,6 +50,8 @@ def user_loop():
             find_car()
         elif ch == 's':
             service_car()
+        elif ch == 'p':
+            show_poor_serviced_cars()
         elif not ch or ch == 'x':
             print("Goodbye")
             break
@@ -66,12 +77,11 @@ def add_car():
     car.save()
 
 
-
 def list_cars():
     cars = Car.objects().order_by('-year')
     for car in cars:
         print(f'{car.make} -- {car.model} with vin {car.vi_number} (year {car.year})')
-        print(f'{len(car.service_history)} of service records')
+        print(f'{len(car.service_history)} of service records\n')
         for s in car.service_history:
             print('   * ${:,.0f} {}'.format(s.price, s.description))
     print()
@@ -105,11 +115,21 @@ def service_car():
 
     updated = Car.objects(vi_number=vin).update_one(push__service_history=service)
     if updated ==0:
-        print("Car with VIN {} not found!".format(vin))
+        print("Car with VIN {} not found!\n".format(vin))
         return
 
-    car.service_history.append(service)
-    car.save()
+
+def show_poor_serviced_cars():
+    level = int(input('What max level of satisfaction are we looking for? [1-5] '))
+
+    #  {'service_history.customres_reting': {$lte: level} }
+    cars = Car.objects(service_history__customers_rating__lte=level)
+    for car in cars:
+        print()
+        print(f'{car.make} -- {car.model} with vin {car.vi_number} (year {car.year})')
+        print(f'{len(car.service_history)} of service records\n')
+        for s in car.service_history:
+            print('   * Stisfaction: {} ${:,.0f} {}\n'.format(s.customers_rating, s.price, s.description))
 
 
 if __name__ == '__main__':
