@@ -7,14 +7,7 @@ from nosql.servicehistory import ServiceHistory
 def main():
     print_header()
     config_mongo()
-    update_doc_version()
     user_loop()
-
-
-def update_doc_version():
-    for car in Car.objects():
-        car._mark_as_changed('vi_number')
-        car.save()
 
 
 def print_header():
@@ -46,8 +39,6 @@ def user_loop():
             add_car()
         elif ch == 'l':
             list_cars()
-        elif ch == 'f':
-            find_car()
         elif ch == 's':
             service_car()
         elif ch == 'p':
@@ -85,10 +76,6 @@ def list_cars():
         for s in car.service_history:
             print('   * ${:,.0f} {}'.format(s.price, s.description))
     print()
-
-
-def find_car():
-    print("TODO: find_car")
 
 
 def service_car():
