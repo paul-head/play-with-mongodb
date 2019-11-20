@@ -14,7 +14,14 @@ class Car(mongoengine.Document):
     engine = mongoengine.EmbeddedDocumentField(Engine, required=True)
     service_history = mongoengine.EmbeddedDocumentListField(ServiceHistory)
 
+    # for service_app.py use this meta:
+    # meta = {
+    #     'db_alias': 'core',
+    #     'collection': 'cars'
+    # }
+
+    # for q_and_a.py/
     meta = {
-        'db_alias': 'core',
+        'db_alias': 'dealership',
         'collection': 'cars'
     }

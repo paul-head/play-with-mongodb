@@ -162,4 +162,6 @@ modules.xml
 # Ignore all local history of files
 .history
 
+__pycache__/
+
 # End of https://www.gitignore.io/api/dotenv,pycharm,pycharm+all,visualstudiocode

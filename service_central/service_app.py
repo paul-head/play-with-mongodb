@@ -89,7 +89,7 @@ def service_car():
     # service = ServiceHistory()
     # service.price = float(input('What is the price? '))
     # service.description = input('What type of service is this? ')
-    # service.customers_rating = int(input('How happy our costumer? [1-5]'))
+    # service.customer_rating = int(input('How happy our costumer? [1-5]'))
 
     # car.service_history.append(service)
     # car.save()
@@ -98,7 +98,7 @@ def service_car():
     service = ServiceHistory()
     service.price = float(input('What is the price? '))
     service.description = input('What type of service is this? ')
-    service.customers_rating = int(input('How happy our costumer? [1-5] '))
+    service.customer_rating = int(input('How happy our costumer? [1-5] '))
 
     updated = Car.objects(vi_number=vin).update_one(push__service_history=service)
     if updated ==0:
@@ -110,13 +110,13 @@ def show_poor_serviced_cars():
     level = int(input('What max level of satisfaction are we looking for? [1-5] '))
 
     #  {'service_history.customres_reting': {$lte: level} }
-    cars = Car.objects(service_history__customers_rating__lte=level)
+    cars = Car.objects(service_history__customer_rating__lte=level)
     for car in cars:
         print()
         print(f'{car.make} -- {car.model} with vin {car.vi_number} (year {car.year})')
         print(f'{len(car.service_history)} of service records\n')
         for s in car.service_history:
-            print('   * Stisfaction: {} ${:,.0f} {}\n'.format(s.customers_rating, s.price, s.description))
+            print('   * Stisfaction: {} ${:,.0f} {}\n'.format(s.customer_rating, s.price, s.description))
 
 
 if __name__ == '__main__':
