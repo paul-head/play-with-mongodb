@@ -20,4 +20,8 @@ class Owner(mongoengine.Document):
     meta = {
         'db_alias': 'dealership',
         'collection': 'owners',
+        'indexes': [
+            'name',
+            'car_ids',
+        ]
     }

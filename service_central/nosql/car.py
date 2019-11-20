@@ -23,5 +23,8 @@ class Car(mongoengine.Document):
     # for q_and_a.py/
     meta = {
         'db_alias': 'dealership',
-        'collection': 'cars'
+        'collection': 'cars',
+        'indexes': [
+            'service_history.price',
+        ]
     }
